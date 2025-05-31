@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Learning: From Scratch to Advanced</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fafafa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: #2c3e50;
+            color: white;
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+
+        .sidebar h1 {
+            padding: 0 1.5rem 1rem;
+            font-size: 1.4rem;
+            border-bottom: 2px solid #34495e;
+            margin-bottom: 1.5rem;
+        }
+
+        .toc {
+            list-style: none;
+        }
+
+        .toc li {
+            margin-bottom: 0.5rem;
+        }
+
+        .toc a {
+            display: block;
+            padding: 0.7rem 1.5rem;
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .toc a:hover,
+        .toc a.active {
+            background: #34495e;
+            border-left-color: #3498db;
+            color: white;
+        }
+
+        .main-content {
+            margin-left: 300px;
+            padding: 2rem 3rem;
+            flex: 1;
+            background: white;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.05);
+        }
+
+        .chapter {
+            display: none;
+            max-width: 800px;
+        }
+
+        .chapter.active {
+            display: block;
+        }
+
+        .chapter-title {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 0.5rem;
+        }
+
+        .chapter-subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section h3 {
+            font-size: 1.5rem;
+            color: #34495e;
+            margin-bottom: 1rem;
+            border-left: 4px solid #3498db;
+            padding-left: 1rem;
+        }
+
+        .section p {
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: "Code Example";
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: #34495e;
+            color: white;
+            padding: 0.2rem 0.7rem;
+            font-size: 0.8rem;
+            border-radius: 3px;
+        }
+
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
+        .note-box {
+            background: #e8f4fd;
+            border-left: 4px solid #3498db;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .note-box::before {
+            content: "📝 Note: ";
+            font-weight: bold;
+            color: #2980b9;
+        }
+
+        .formula {
+            background: #f9f9f9;
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: center;
+            border-radius: 5px;
+            font-style: italic;
+            border: 1px solid #ddd;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #eee;
+        }
+
+        .nav-btn {
+            padding: 0.7rem 1.5rem;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #2980b9;
+        }
+
+        .nav-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 250px;
+            }
+            .main-content {
+                margin-left: 250px;
+                padding: 1rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="sidebar">
+            <h1>Machine Learning Course</h1>
+            <ul class="toc">
+                <li><a href="#" onclick="showChapter(0)" class="active">Chapter 1: Introduction to ML</a></li>
+                <li><a href="#" onclick="showChapter(1)">Chapter 2: Python Fundamentals</a></li>
+                <li><a href="#" onclick="showChapter(2)">Chapter 3: Data Preprocessing</a></li>
+                <li><a href="#" onclick="showChapter(3)">Chapter 4: Linear Regression</a></li>
+                <li><a href="#" onclick="showChapter(4)">Chapter 5: Logistic Regression</a></li>
+                <li><a href="#" onclick="showChapter(5)">Chapter 6: Decision Trees</a></li>
+                <li><a href="#" onclick="showChapter(6)">Chapter 7: Random Forest</a></li>
+                <li><a href="#" onclick="showChapter(7)">Chapter 8: SVM</a></li>
+                <li><a href="#" onclick="showChapter(8)">Chapter 9: K-Means Clustering</a></li>
+                <li><a href="#" onclick="showChapter(9)">Chapter 10: Neural Networks</a></li>
+                <li><a href="#" onclick="showChapter(10)">Chapter 11: Deep Learning</a></li>
+                <li><a href="#" onclick="showChapter(11)">Chapter 12: Model Evaluation</a></li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <div class="chapter active">
+                <h1 class="chapter-title">Chapter 1: Introduction to Machine Learning</h1>
+                <p class="chapter-subtitle">Understanding the fundamentals of machine learning and its applications</p>
+
+                <div class="section">
+                    <h3>What is Machine Learning?</h3>
+                    <p>Machine Learning is a subset of artificial intelligence that enables computers to learn and make decisions from data without being explicitly programmed for every task. It's like teaching a computer to recognize patterns and make predictions based on examples.</p>
+                    
+                    <div class="note-box">
+                        Machine learning algorithms build mathematical models based on training data to make predictions or decisions without being explicitly programmed to perform the task.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Types of Machine Learning</h3>
+                    <p><strong>1. Supervised Learning:</strong> Learning with labeled examples (input-output pairs)</p>
+                    <p><strong>2. Unsupervised Learning:</strong> Finding patterns in data without labeled examples</p>
+                    <p><strong>3. Reinforcement Learning:</strong> Learning through interaction and feedback</p>
+
+                    <div class="code-block">
+                        <pre># Simple example of supervised learning concept
+# We have data (features) and labels (target)
+features = [[1, 2], [2, 3], [3, 4], [4, 5]]  # Input data
+labels = [3, 5, 7, 9]  # Expected outputs
+
+# Goal: Learn the pattern to predict new outputs
+# Pattern: output = (feature1 + feature2) * 1
+print("Pattern discovered: sum of features equals label")</pre>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Key Concepts</h3>
+                    <p><strong>Features:</strong> Individual measurable properties of observed phenomena</p>
+                    <p><strong>Training Data:</strong> Dataset used to teach the algorithm</p>
+                    <p><strong>Model:</strong> The mathematical representation learned from data</p>
+                    <p><strong>Prediction:</strong> Output generated by the model for new data</p>
+                </div>
+
+                <div class="navigation">
+                    <span></span>
+                    <a href="#" class="nav-btn" onclick="showChapter(1)">Next: Python Fundamentals →</a>
+                </div>
+            </div>
+
+            <div class="chapter">
+                <h1 class="chapter-title">Chapter 2: Python Fundamentals for ML</h1>
+                <p class="chapter-subtitle">Essential Python concepts and libraries for machine learning</p>
+
+                <div class="section">
+                    <h3>Essential Libraries</h3>
+                    <p>Before diving into machine learning, we need to understand the core Python libraries that power most ML projects.</p>
+
+                    <div class="code-block">
+                        <pre># Essential imports for machine learning
+import numpy as np          # Numerical computing
+import pandas as pd         # Data manipulation
+import matplotlib.pyplot as plt  # Plotting
+import seaborn as sns       # Statistical plotting
+
+# Example: Creating and manipulating arrays
+data = np.array([1, 2, 3, 4, 5])
+print(f"Mean: {np.mean(data)}")
+print(f"Standard deviation: {np.std(data)}")</pre>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>NumPy Basics</h3>
+                    <p>NumPy is the foundation of scientific computing in Python. It provides support for large, multi-dimensional arrays and matrices.</p>
+
+                    <div class="code-block">
+                        <pre># Creating arrays
+arr_1d = np.array([1, 2, 3, 4, 5])
+arr_2d = np.array([[1, 2, 3], [4, 5, 6]])
+
+# Array operations
+print("Shape:", arr_2d.shape)
+print("Array multiplication:")
+result = arr_2d * 2
+print(result)</pre>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Pandas for Data Handling</h3>
+                    <p>Pandas provides data structures and tools for effective data manipulation and analysis.</p>
+
+                    <div class="code-block">
+                        <pre># Creating a DataFrame
+data = {
+    'Name': ['Alice', 'Bob', 'Charlie'],
+    'Age': [25, 30, 35],
+    'Salary': [50000, 60000, 70000]
+}
+df = pd.DataFrame(data)
+print(df)
+print(f"\nDataFrame info:")
+print(df.info())</pre>
+                    </div>
+                </div>
+
+                <div class="navigation">
+                    <a href="#" class="nav-btn" onclick="showChapter(0)">← Previous: Introduction</a>
+                    <a href="#" class="nav-btn" onclick="showChapter(2)">Next: Data Preprocessing →</a>
+                </div>
+            </div>
+
+            <!-- Chapter 3: Data Preprocessing -->
+            <div class="chapter">
+                <h1 class="chapter-title">Chapter 3: Data Preprocessing</h1>
+                <p class="chapter-subtitle">Cleaning and preparing data for machine learning algorithms</p>
+
+                <div class="section">
+                    <h3>Why Data Preprocessing?</h3>
+                    <p>Real-world data is often incomplete, inconsistent, and contains errors. Data preprocessing is the crucial step of cleaning and transforming raw data into a format suitable for machine learning algorithms.</p>
+
+                    <div class="note-box">
+                        Data scientists spend approximately 80% of their time on data preprocessing. Quality data leads to better model performance.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Handling Missing Data</h3>
+                    <p>Missing data is a common problem that can significantly impact model performance if not handled properly.</p>
+
+                    <div class="code-block">
+                        <pre># Handling missing data
+import pandas as pd
+import numpy as np
+
+# Create sample data with missing values
+data = {
+    'Age': [25, 30, np.nan, 35, 28],
+    'Salary': [50000, np.nan, 45000, 70000, 52000],
+    'Experience': [2, 5, 3, np.nan, 4]
+}
+df = pd.DataFrame(data)
+
+# Check for missing values
+print("Missing values:")
+print(df.isnull().sum())
+
+# Fill missing values
+df['Age'].fillna(df['Age'].mean(), inplace=True)
+df['Salary'].fillna(df['Salary'].median(), inplace=True)
+df.dropna(inplace=True)  # Drop rows with remaining NaN values
+
+print("\nAfter handling missing values:")
+print(df)</pre>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Feature Scaling</h3>
+                    <p>Different features often have different scales. Feature scaling ensures all features contribute equally to the model.</p>
+
+                    <div class="code-block">
+                        <pre># Feature scaling example
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+
+# Sample data
+data = np.array([[1, 1000], [2, 2000], [3, 1500], [4, 3000]])
+
+# Standardization (mean=0, std=1)
+scaler_standard = StandardScaler()
+data_standard = scaler_standard.fit_transform(data)
+print("Standardized data:")
+print(data_standard)
+
+# Min-Max scaling (range 0-1)
+scaler_minmax = MinMaxScaler()
+data_minmax = scaler_minmax.fit_transform(data)
+print("\nMin-Max scaled data:")
+print(data_minmax)</pre>
+                    </div>
+                </div>
+
+                <div class="navigation">
+                    <a href="#" class="nav-btn" onclick="showChapter(1)">← Previous: Python Fundamentals</a>
+                    <a href="#" class="nav-btn" onclick="showChapter(3)">Next: Linear Regression →</a>
+                </div>
+            </div>
+
+            <div class="chapter">
+                <h1 class="chapter-title">Chapter 4: Linear Regression</h1>
+                <p class="chapter-subtitle">Understanding and implementing linear regression from scratch</p>
+
+                <div class="section">
+                    <h3>What is Linear Regression?</h3>
+                    <p>Linear regression is a fundamental machine learning algorithm that models the relationship between a dependent variable and independent variables by fitting a linear equation to observed data.</p>
+
+                    <div class="formula">
+                        y = mx + b
+                        <br>
+                        where y = predicted value, m = slope, x = input feature, b = y-intercept
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Linear Regression from Scratch</h3>
+                    <p>Let's implement linear regression using the mathematical approach with gradient descent.</p>
+
+                    <div class="code-block">
+                        <pre># Linear Regression from scratch
+import numpy as np
+import matplotlib.pyplot as plt
+
+class LinearRegression:
+    def __init__(self, learning_rate=0.01, iterations=1000):
+        self.learning_rate = learning_rate
+        self.iterations = iterations
+        
+    def fit(self, X, y):
+        # Initialize parameters
+        self.m = 0  # slope
+        self.b = 0  # intercept
+        n = len(X)
+        
+        # Gradient descent
+        for i in range(self.iterations):
+            # Predictions
+            y_pred = self.m * X + self.b
+            
+            # Calculate gradients
+            dm = (-2/n) * sum(X * (y - y_pred))
+            db = (-2/n) * sum(y - y_pred)
+            
+            # Update parameters
+            self.m -= self.learning_rate * dm
+            self.b -= self.learning_rate * db
+    
+    def predict(self, X):
+        return self.m * X + self.b
+
+# Example usage
+X = np.array([1, 2, 3, 4, 5])
+y = np.array([2, 4, 6, 8, 10])
+
+model = LinearRegression()
+model.fit(X, y)
+
+predictions = model.predict(X)
+print(f"Slope: {model.m:.2f}")
+print(f"Intercept: {model.b:.2f}")
+print(f"Predictions: {predictions}")</pre>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Using Scikit-learn</h3>
+                    <p>While understanding the math is important, scikit-learn provides optimized implementations for practical use.</p>
+
+                    <div class="code-block">
+                        <pre># Linear Regression with scikit-learn
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Create and train model
+model_sklearn = LinearRegression()
+X_reshaped = X.reshape(-1, 1)  # sklearn expects 2D array
+model_sklearn.fit(X_reshaped, y)
+
+# Make predictions
+y_pred_sklearn = model_sklearn.predict(X_reshaped)
+
+# Evaluate model
+mse = mean_squared_error(y, y_pred_sklearn)
+r2 = r2_score(y, y_pred_sklearn)
+
+print(f"Mean Squared Error: {mse:.2f}")
+print(f"R² Score: {r2:.2f}")
+print(f"Coefficient: {model_sklearn.coef_[0]:.2f}")
+print(f"Intercept: {model_sklearn.intercept_:.2f}")</pre>
+                    </div>
+                </div>
+
+                <div class="navigation">
+                    <a href="#" class="nav-btn" onclick="showChapter(2)">← Previous: Data Preprocessing</a>
+                    <a href="#" class="nav-btn" onclick="showChapter(4)">Next: Logistic Regression →</a>
+                </div>
+            </div>
+
+            <div class="chapter">
+                <h1 class="chapter-title">Chapter 5: Logistic Regression</h1>
+                <p class="chapter-subtitle">Classification using logistic regression</p>
+
+                <div class="section">
+                    <h3>Introduction to Classification</h3>
+                    <p>While linear regression predicts continuous values, logistic regression is used for classification problems where we predict discrete categories or classes.</p>
+
+                    <div class="formula">
+                        p = 1 / (1 + e^(-z))
+                        <br>
+                        where z = w₀ + w₁x₁ + w₂x₂ + ... + wₙxₙ
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Sigmoid Function</h3>
+                    <p>The sigmoid function maps any real number to a value between 0 and 1, making it perfect for probability estimation.</p>
+
+                    <div class="code-block">
+                        <pre># Sigmoid function implementation
+import numpy as np
+import matplotlib.pyplot as plt
+
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))
+
+# Plot sigmoid function
+z = np.linspace(-10, 10, 100)
+y = sigmoid(z)
+
+plt.figure(figsize=(8, 6))
+plt.plot(z, y, 'b-', linewidth=2)
+plt.title('Sigmoid Function')
+plt.xlabel('z')
+plt.ylabel('σ(z)')
+plt.grid(True)
+plt.axhline(y=0.5, color='r', linestyle='--', alpha=0.7)
+plt.show()
+
+print("Sigmoid of 0:", sigmoid(0))
+print("Sigmoid of large positive number:", sigmoid(10))
+print("Sigmoid of large negative number:", sigmoid(-10))</pre>
+                    </div>
+                </div>
+
+                <div class="navigation">
+                    <a href="#" class="nav-btn" onclick="showChapter(3)">← Previous: Linear Regression</a>
+                    <a href="#" class="nav-btn" onclick="showChapter(5)">Next: Decision Trees →</a>
+                </div>
+            </div>
+
+            <div class="chapter">
+                <h1 class="chapter-title">More Chapters Coming Soon...</h1>
+                <p class="chapter-subtitle">This template provides the structure for your complete ML course</p>
+                
+                <div class="section">
+                    <h3>How to Add More Content</h3>
+                    <p>To add more chapters, simply:</p>
+                    <p>1. Create new chapter divs with class "chapter"</p>
+                    <p>2. Add corresponding links in the sidebar navigation</p>
+                    <p>3. Update the showChapter() function to handle the new chapters</p>
+                    <p>4. Follow the same structure: title, sections, code blocks, and navigation</p>
+                </div>
+
+                <div class="navigation">
+                    <a href="#" class="nav-btn" onclick="showChapter(4)">← Previous: Logistic Regression</a>
+                    <span></span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let currentChapter = 0;
+        const totalChapters = document.querySelectorAll('.chapter').length;
+
+        function showChapter(chapterIndex) {
+            const chapters = document.querySelectorAll('.chapter');
+            chapters.forEach(chapter => chapter.classList.remove('active'));
+            
+            chapters[chapterIndex].classList.add('active');
+            
+            const tocLinks = document.querySelectorAll('.toc a');
+            tocLinks.forEach(link => link.classList.remove('active'));
+            tocLinks[chapterIndex].classList.add('active');
+            
+            currentChapter = chapterIndex;
+            
+            document.querySelector('.main-content').scrollTop = 0;
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft' && currentChapter > 0) {
+                showChapter(currentChapter - 1);
+            } else if (e.key === 'ArrowRight' && currentChapter < totalChapters - 1) {
+                showChapter(currentChapter + 1);
+            }
+        });
+    </script>
+</body>
+</html>
